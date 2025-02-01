@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Suggestion Box - Kiota School</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #d32f2f; /* Red */
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #388e3c; /* Green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2e7d32; /* Darker Green */
+        }
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            color: #388e3c; /* Green */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="kiota_logo.png" alt="Kiota School Logo">
+        </div>
+        <h1>Anonymous Suggestion Box</h1>
+        <p>Submit your suggestions anonymously:</p>
+        <form id="suggestionForm">
+            <textarea id="suggestion" placeholder="Enter your suggestion here..." required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // Save suggestions to localStorage
+        document.getElementById('suggestionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const suggestion = document.getElementById('suggestion').value;
+
+            // Get existing suggestions or initialize an empty array
+            const suggestions = JSON.parse(localStorage.getItem('suggestions')) || [];
+
+            // Add the new suggestion
+            suggestions.push(suggestion);
+
+            // Save back to localStorage
+            localStorage.setItem('suggestions', JSON.stringify(suggestions));
+
+            // Show success message
+            document.getElementById('message').textContent = 'Thank you for your suggestion!';
+            document.getElementById('suggestionForm').reset();
+        });
+    </script>
+</body>
+</html>
