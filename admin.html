@@ -5,54 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Kiota School</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo img {
-            max-width: 150px;
-            height: auto;
-        }
-        h1 {
-            text-align: center;
-            color: #d32f2f; /* Red */
-        }
-        .suggestions {
-            margin-top: 20px;
-        }
-        .suggestion {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        .suggestion:last-child {
-            border-bottom: none;
-        }
-        .logout {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .logout a {
-            color: #d32f2f; /* Red */
-            text-decoration: none;
-        }
-        .logout a:hover {
-            text-decoration: underline;
-        }
+        /* Add your CSS here */
     </style>
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js"></script>
 </head>
 <body>
     <div class="container">
@@ -72,20 +29,38 @@
     </div>
 
     <script>
-        // Load suggestions from localStorage
-        const suggestions = JSON.parse(localStorage.getItem('suggestions')) || [];
-        const suggestionsList = document.getElementById('suggestionsList');
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
 
-        if (suggestions.length > 0) {
-            suggestions.forEach(suggestion => {
-                const div = document.createElement('div');
-                div.className = 'suggestion';
-                div.textContent = suggestion;
-                suggestionsList.appendChild(div);
-            });
-        } else {
-            suggestionsList.textContent = 'No suggestions yet.';
-        }
+        // Reference to the database
+        const database = firebase.database();
+
+        // Fetch and display suggestions
+        database.ref('suggestions').on('value', (snapshot) => {
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = ''; // Clear existing suggestions
+
+            const suggestions = snapshot.val();
+            if (suggestions) {
+                Object.values(suggestions).forEach(suggestion => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion';
+                    div.textContent = suggestion.text;
+                    suggestionsList.appendChild(div);
+                });
+            } else {
+                suggestionsList.textContent = 'No suggestions yet.';
+            }
+        });
     </script>
 </body>
 </html>
